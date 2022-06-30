@@ -14,6 +14,7 @@ let clienteSchema = new Schema(
     },
     cpf: {
       type: String,
+      immutable : true,
       validate: {
         validator: function(cpfInput){
             return validaNumeros(cpfInput , 11)}
@@ -59,11 +60,16 @@ let clienteSchema = new Schema(
             }
         }
     ],
-    financeiros : [{ type: Schema.Types.ObjectId , ref: 'Financeiro'}]
+    financeiros : [{ type: Schema.Types.ObjectId , ref: 'Financeiro'}],
+
+    saldoConta : {
+      type : Number,
+      default : '0'
+    }
 
   }
 );
 
-let Cliente = mongoose.model("cliente", clienteSchema);
+let Cliente = mongoose.model("Cliente", clienteSchema);
 
 module.exports = Cliente;

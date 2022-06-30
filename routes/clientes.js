@@ -5,7 +5,7 @@ const Financeiro = require('../models/Financeiro.js')
 
 router.get('', async (req,res) => {
     try{
-      let clientes = await Cliente.find();  
+      let clientes = await Cliente.find().populate('financeiros');  
           res.send(clientes);
   
     }catch (e){ 
@@ -14,8 +14,8 @@ router.get('', async (req,res) => {
   })
 router.get('/:cpf', async (req,res) => {
     try{
-      let clientes = await Cliente.findOne( {cpf : req.params.cpf} );  
-          res.send(clientes);
+      let cliente = await Cliente.findOne( {cpf : req.params.cpf} ).populate('financeiros');  
+          res.send(cliente);
   
     }catch (e){ 
       res.send(e.message , e.status)
@@ -43,8 +43,9 @@ router.get('/:cpf', async (req,res) => {
   
   router.delete('//:cpf' , async (req,res) => {
     try{
+      let {cpf} = req.params
       const cliente = await Cliente.findOneAndDelete(
-        { cpf : req.params.cpf})
+        { cpf : cpf})
       res.redirect('')
   
     } catch (e){res.send(e.message , e.status)}

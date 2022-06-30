@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const Cliente = require('./models/Cliente.js')
 const Financeiro = require('./models/Financeiro.js')
 let clienteRoutes = require('./routes/clientes')
-
+let financeiroRoutes = require('./routes/financeiros')
 
 const port = 3001;
 const config = require("./config");
@@ -29,6 +29,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use('/clientes' , clienteRoutes)
+app.use('/financeiros' , financeiroRoutes)
 
 
 
@@ -87,5 +88,17 @@ module.exports = app;
 
 // Cliente.insertMany(clientes)
 
+
+
+// Financeiro.insertOne(financeiro)
+// teste = async function(){
+//   let cliente =  await Cliente.findOne({nome: 'Luana Duarte'})
+//   cliente.saldoConta = 0
+//   await cliente.save()
+//   console.log(cliente)
+  
+// }
+
+// teste()
 
 
