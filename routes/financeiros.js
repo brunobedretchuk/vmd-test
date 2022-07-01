@@ -6,7 +6,7 @@ const Financeiro = require("../models/Financeiro.js");
 router.get("", async (req, res) => { //rota para get requests que retorna todas as transações cadastradas
   try {
     let financeiros = await Financeiro.find();
-    res.send(financeiros);
+    res.send(displayStuff(financeiros));
   } catch (e) {
     res.send(e.message, e.status);
   }
