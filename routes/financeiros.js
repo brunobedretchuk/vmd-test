@@ -3,7 +3,7 @@ const router = express.Router();
 const Cliente = require("../models/Cliente.js");
 const Financeiro = require("../models/Financeiro.js");
 
-router.get("", async (req, res) => {
+router.get("", async (req, res) => { //rota para get requests que retorna todas as transações cadastradas
   try {
     let financeiros = await Financeiro.find();
     res.send(financeiros);
@@ -12,7 +12,7 @@ router.get("", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res) => { //rota para get requests que retorna a transação especificada
   try {
     let { id } = req.params;
     let financeiro = await Financeiro.findById(id);
@@ -22,9 +22,10 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("", async (req, res) => {
+router.post("", async (req, res) => { //rota para post requests que insere uma nova transação financeira, desde que o CPF requisitado conste no banco de dados
   try {
     let financeiro = new Financeiro(req.body);
+
     isFinanceiroValid = await cpfExisteEmClientes(financeiro);
     if (isFinanceiroValid) {
         await financeiro.save();
@@ -39,7 +40,7 @@ router.post("", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (req, res) => { //rota para put requests que modifica uma transação financeira. CPF não pode ser modificado
   try {
     if (req.body.cpf === undefined) {
       const financeiro = await Financeiro.findOneAndUpdate(
@@ -77,7 +78,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-let cpfExisteEmClientes = async function (financeiro) {
+let cpfExisteEmClientes = async function (financeiro) { // verifica se a chave cpf da transação financeira bate com o cpf de algum cliente cadastrado
   let clienteComCpf = await Cliente.findOne({ cpf: financeiro.cpf });
   if (clienteComCpf == null) {
     return false;
@@ -85,7 +86,7 @@ let cpfExisteEmClientes = async function (financeiro) {
   return true;
 };
 
-let atualizaSaldoConta = async function (financeiro, tipo , req = {}) {
+let atualizaSaldoConta = async function (financeiro, tipo , req = {}) { // atualiza o saldo da conta sempre que alguma transação é criada, modificada ou removida do sistema
     let cliente = await Cliente.findOne({ cpf: financeiro.cpf });
   if (tipo == "criar") {
     let valor = pegaSinalDoValor(financeiro)
@@ -113,24 +114,32 @@ let atualizaSaldoConta = async function (financeiro, tipo , req = {}) {
   }
 };
 
-let cadastrarTransacaoEmCliente = async function (financeiro) {
+let cadastrarTransacaoEmCliente = async function (financeiro) { // caso a transação seja válida, ela é cadastrada dentro do array "financeiros" de um cliente
   let cliente = await Cliente.findOne({ cpf: financeiro.cpf });
   cliente.financeiros.push(financeiro);
   await cliente.save();
 };
 
-let retornaCpfDoCliente = async function (id) {
+let retornaCpfDoCliente = async function (id) { // serve para pegar o cpf do cliente na rota DELETE antes que a transacao seja deletada
   let financeiro = await Financeiro.findById(id);
   return financeiro.cpf;
 };
 
-let pegaSinalDoValor = function(financeiro){
+let pegaSinalDoValor = function(financeiro){ // retorna o valor da transação com sinal de positivo ou negativo, a depender do seu tipo (entrada ou saída)
     if(financeiro.tipo == 'entrada'){
         return financeiro.valor
     }
     else if (financeiro.tipo == 'saída'){
         return -financeiro.valor
     }
+}
+
+let displayStuff = function(objArr){ // função pra dispor os elementos de maneira um pouco mais legível
+  let string = ''
+  for (let obj of objArr){
+    string += `${obj} <br><br>`
+  }
+  return string
 }
 
 module.exports = router;

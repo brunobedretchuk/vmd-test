@@ -1,18 +1,22 @@
 const express = require("express");
 const app = express();
+
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+
 const Cliente = require('./models/Cliente.js')
 const Financeiro = require('./models/Financeiro.js')
+
+//rotas das collections estão nos respectivos arquivos da pasta routes
 let clienteRoutes = require('./routes/clientes')
 let financeiroRoutes = require('./routes/financeiros')
 
+
 const port = 3001;
 const config = require("./config");
+const dbUrl = config.dbUrl;
 
 // const clientesRouter = require("./routes/clientes");
-
-const dbUrl = config.dbUrl;
 
 var options = {
   keepAlive: true,
@@ -21,6 +25,7 @@ var options = {
   useUnifiedTopology: true,
 };
 
+//conecta ao banco de dados hospedado no mongoAtlas
 mongoose.connect(dbUrl, options, (err) => {
   if (err) console.log(err);
 });
@@ -38,67 +43,5 @@ app.listen(port, function () {
 });
 module.exports = app;
 
-
-// let clientes = [
-//   {
-//     endereco: {
-//       cep: '88115900',
-//       logradouro: 'rua teste alguma 2',
-//       cidade: 'Biguaçu',
-//       uf : 'SC'
-//     },
-//     nome: 'Alvaro Nobrega',
-//     cpf: '12345678912',
-//     telefones: [ {ddd : '55' , numero : '999999999'}],
-//   },
-//   {
-//     endereco: {
-//       cep: '88115900',
-//       logradouro: 'rua teste alguma 2',
-//       cidade: 'Biguaçu',
-//       uf : 'SC'
-//     },
-//     nome: 'Balthazar Silva',
-//     cpf: '98765432132',
-//     telefones: [ {ddd : '55' , numero : '999999999'}],
-//   },
-//   {
-//     endereco: {
-//       cep: '88115900',
-//       logradouro: 'rua teste alguma 2',
-//       cidade: 'Biguaçu',
-//       uf : 'SC'
-//     },
-//     nome: 'Luana Duarte',
-//     cpf: '96385274123',
-//     telefones: [ {ddd : '55' , numero : '999999999'}],
-//   },
-//   {
-//     endereco: {
-//       cep: '88115900',
-//       logradouro: 'rua teste alguma 2',
-//       cidade: 'Biguaçu',
-//       uf : 'SC'
-//     },
-//     nome: 'Rock Linderson',
-//     cpf: '74185296398',
-//     telefones: [ {ddd : '55' , numero : '999999999'}],
-//   },
-// ]
-
-// Cliente.insertMany(clientes)
-
-
-
-// Financeiro.insertOne(financeiro)
-// teste = async function(){
-//   let cliente =  await Cliente.findOne({nome: 'Luana Duarte'})
-//   cliente.saldoConta = 0
-//   await cliente.save()
-//   console.log(cliente)
-  
-// }
-
-// teste()
 
 
