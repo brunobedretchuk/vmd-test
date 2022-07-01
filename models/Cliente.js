@@ -30,15 +30,17 @@ let clienteSchema = new Schema(
           },
       },
       logradouro: {
-        type: String
+        type: String,
+        default: ''
       },
       cidade: {
-        type: String
+        type: String,
+        default: ''
       },
       uf: {
         type: String,
-        minLength: 2,
-        maxLength: 2
+        maxLength: 2,
+        default: ''
 
       }
     },

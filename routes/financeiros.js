@@ -25,6 +25,8 @@ router.get("/:id", async (req, res) => {
 router.post("", async (req, res) => {
   try {
     let financeiro = new Financeiro(req.body);
+
+
     isFinanceiroValid = await cpfExisteEmClientes(financeiro);
     if (isFinanceiroValid) {
         await financeiro.save();
